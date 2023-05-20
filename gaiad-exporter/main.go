@@ -85,10 +85,10 @@ func ParseFlags() (string, string) {
 func GetGaiaStatus() string {
 	//JSONPayload := `{"NodeInfo":{"protocol_version":{"p2p":"8","block":"11","app":"0"},"id":"6f4d5f7ecb3d73ca291658d5d2368e23c34d9122","listen_addr":"tcp://0.0.0.0:26656","network":"theta-testnet-001","version":"0.34.27","channels":"40202122233038606100","moniker":"sr","other":{"tx_index":"on","rpc_address":"tcp://127.0.0.1:26657"}},"SyncInfo":{"latest_block_hash":"527D77A25A007353170611E0A3FB7163A281A47EF31DB9A46AAF25D42A5E1515","latest_app_hash":"48C6486DA403F98F13C22D7FF0114899CA88BFE2AC734B2A6C5E0C172046C8B6","latest_block_height":"16041033","latest_block_time":"2023-05-19T16:36:07.825229312Z","earliest_block_hash":"0C78904CC0CF2450C7A0845425FA2CA07A1003671B3DCD4CBAB9D160FFE56948","earliest_app_hash":"337522801C1F4279E170123DFA3D0DA604307F5F2D501DFE9B90507212F78D8E","earliest_block_height":"16040001","earliest_block_time":"2023-05-19T15:01:26.554070159Z","catching_up":true},"ValidatorInfo":{"Address":"AA20C839B1BBEF4BE431829A658C2EA6B28D1D22","PubKey":{"type":"tendermint/PubKeyEd25519","value":"gl8QDOmLJswTht/ID8IeTeXtYghwNUeysOglrSbjPEY="},"VotingPower":"0"}}`
 
-	service := "/usr/sbin/gaiad"
+	//service := gaiadPath
 	argument := "status"
-	command := exec.Command(service, argument)
-	return JSONPayload
+	command := exec.Command(gaiadPath, argument)
+	return command
 }
 
 func handleMetrics() {
