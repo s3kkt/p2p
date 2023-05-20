@@ -1,0 +1,25 @@
+---
+- name: Upgrade all apt packages
+  become: true
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+    update_cache: yes 
+
+- name: Install suggested packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - apt-show-versions
+    - libpam-cracklib
+    - rkhunter
+    - clamav
+    - aide
+    - sysstat
+    - auditd
+    - debsums
+    - acct
+    - arpwatch
+    - rng-tools
+    - unattended-upgrades

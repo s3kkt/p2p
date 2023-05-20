@@ -1,0 +1,4 @@
+include:
+- project: 'ansible/ci/ansible-lint'
+  ref: master
+  file: 'lint.yml'

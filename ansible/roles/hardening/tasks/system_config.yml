@@ -1,0 +1,134 @@
+---
+- name: Disable coredump
+  blockinfile:
+    path: /etc/security/limits.conf
+    block: |
+      * hard core 0
+      * soft core 0
+
+- name: Disable unused protocols
+  copy:
+    dest: "/etc/modprobe.d/{{ item }}"
+    content: |
+      install {{ item }} /bin/true
+  with_items:
+    - dccp
+    - sctp
+    - rds
+    - tipc
+    - usb-storage
+
+- name: Start and enable sysstat service
+  systemd:
+    name: sysstat.service
+    state: started
+    enabled: yes
+
+- name: Unauthorize USB devices
+  shell:
+    cmd: "echo 0 > /sys/bus/usb/devices/usb1/authorized"
+
+- name: Init AIDE database
+  become: true
+  block:
+    - name: Init AIDE
+      shell:
+        cmd: "aide --init -c /etc/aide/aide.conf"
+    - name: Rename initial db file
+      shell:
+        chdir: "/var/lib/aide/"
+        cmd: "mv aide.db.new aide.db"
+
+- name: Add a legal banner /etc/issue
+  lineinfile:
+    path: /etc/issue
+    regexp: "Ubuntu"
+    line: "System is monitored and your privacy can be limited, if required by legal requirements or law."
+
+- name: Add a legal banner /etc/issue.net
+  lineinfile:
+    path: /etc/issue.net
+    regexp: "Ubuntu"
+    line: "System is monitored and your privacy can be limited, if required by legal requirements or law."
+
+- name: Password min hashing rounds increase
+  replace: 
+    path: /etc/login.defs
+    regexp: "# SHA_CRYPT_MIN_ROUNDS 5000"
+    replace: "SHA_CRYPT_MIN_ROUNDS 10000"
+
+- name: Password max hashing rounds increase
+  replace: 
+    path: /etc/login.defs
+    regexp: "# SHA_CRYPT_MAX_ROUNDS 5000"
+    replace: "SHA_CRYPT_MAX_ROUNDS 10000"
+
+# https://github.com/trimstray/the-practical-linux-hardening-guide/wiki/Auditd
+- name: Set audit rules
+  lineinfile:
+    path: /etc/audit/rules.d/audit.rules
+    line: '-a exit,always -F arch=b64 -F euid=0 -S execve'
+    insertafter: EOF
+
+- name: Postfix config
+  notify: Restart postfix service
+  shell:
+     cmd: "{{ item }}"
+  with_items:
+    - "postconf -e disable_vrfy_command=yes"
+    - "postconf -e inet_interfaces=loopback-only"
+    - "postconf -e smtpd_helo_required=yes"
+    - "postconf -e smtp_tls_loglevel=1"
+    - "postconf -e smtpd_banner=\"$myhostname ESMTP\""
+
+- name: Fix /root/.ssh permissions
+  file:
+    path: /root/.ssh
+    mode: "700"
+
+- name: Fix other directories permissions
+  file:
+    path: "{{ item }}"
+    mode: "600"
+  with_items:
+    - "/etc/ssh/sshd_config"
+    - "/etc/crontab"
+    - "/etc/cron.d"
+    - "/etc/cron.daily"
+    - "/etc/cron.hourly"
+    - "/etc/cron.weekly"
+    - "/etc/cron.monthly"
+    #- "/etc/at.deny"
+
+# Fix users homedirs
+- name: Get all users
+  getent:
+    database: passwd
+    split: ':'
+- set_fact:
+    my_users: "{{ getent_passwd | dict2items | json_query('[? contains(value,`/bin/bash`)].key') }}"
+- name: Change access to users home dirs
+  file:
+    path: "/home/{{ item }}"
+    mode: "750"
+  loop: "{{ my_users }}"
+  ignore_errors: true
+
+- name: Tune sysctl
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    state: present
+    reload: true
+    ignoreerrors: true
+  with_dict: "{{ sysctl_entries }}"
+
+- name: UMASK hardeining
+  replace: 
+    path: /etc/login.defs
+    regexp: "UMASK.*022"
+    replace: "UMASK     027"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

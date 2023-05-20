@@ -1,0 +1,29 @@
+---
+- name: Build gaiad-exporter binary
+  delegate_to: 127.0.0.1
+  connection: local
+  become: false
+  block:
+    - name: Create tmp dir
+      tempfile:
+        state: directory
+      register: tmp_dir
+    - name: Build binary
+      shell:
+        #chdir: "{{ tmp_dir.path }}"
+        #cmd: "DOCKER_DEFAULT_PLATFORM=linux/amd64 docker run -v $(pwd):/binary golang:1.18-bullseye bash -c 'cd /binary/gaiad-exporter && go build -o gaiad-exporter main.go && cp gaiad-exporter /binary'"
+        cmd: "DOCKER_DEFAULT_PLATFORM=linux/amd64 docker run -v $(pwd):/binary golang:1.18-bullseye bash -c 'ls -la /'"
+
+
+#- name: Copy exporter binary to cosmos hosts
+#  copy:
+#    src: "{{ tmp_dir.path }}/gaiad-exporter"
+#    dest: "{{ gaia_binary_dest_path }}"
+#    mode: "750"
+
+#- name: Ensure gaiad-exporter systemd unit file
+#  notify: Restart gaiad-exporter service
+#  template:
+#    src: gaiad-exporter.service.j2
+#    dest: /etc/systemd/system/gaiad-exporter.service
+

@@ -1,0 +1,53 @@
+---
+user_list:
+  - name: sr
+    password_hash: "!"
+    groups: [ sudo ]
+    ssh_keys:
+    - { name: main, type: ssh-ed25519, value: "AAAAC3NzaC1lZDI1NTE5AAAAIM6ujfwnIbZOdgqDiQcBECbApL3iHL9BFn9NxPJhuohR", comment: sr@cosmos }
+
+everywhere_allowed_users:
+  - name: sr
+
+# https://secscan.acron.pl/start?do=search&id=sysctl
+# https://www.cyberciti.biz/faq/linux-kernel-etcsysctl-conf-security-hardening/
+sysctl_entries:
+  dev.tty.ldisc_autoload: 0
+  #fs.protected_fifos: 1
+  fs.protected_fifos: 2
+  fs.protected_regular: 2
+  fs.protected_hardlinks: 1
+  fs.suid_dumpable: 0
+  kernel.core_pattern: "|/bin/false"
+  kernel.core_uses_pid: 1
+  kernel.dmesg_restrict: 1
+  kernel.kptr_restrict: 2
+  kernel.perf_event_paranoid: 3
+  kernel.sysrq: 0
+  kernel.unprivileged_bpf_disabled: 1
+  modules_disabled: 1
+  net.core.bpf_jit_harden: 2
+  net.ipv4.conf.all.forwarding: 0
+  net.ipv4.conf.all.accept_redirects: 0
+  net.ipv4.conf.all.log_martians: 1
+  net.ipv4.conf.all.rp_filter: 1
+  net.ipv4.conf.all.send_redirects: 0
+  net.ipv4.conf.default.accept_redirects: 0
+  net.ipv4.conf.default.accept_source_route: 0
+  net.ipv4.conf.default.log_martians: 1
+  net.ipv6.conf.all.accept_redirects: 0
+  net.ipv6.conf.default.accept_redirects: 0
+
+sshd:
+  Compression: off
+  AllowTcpForwarding: no
+  ClientAliveCountMax: 2
+  LogLevel: VERBOSE
+  MaxAuthTries: 3
+  MaxSessions: 2
+  TCPKeepAlive: no
+  X11Forwarding: no
+  AllowAgentForwarding: no
+
+gaia_release_tag: "v9.1.0"
+gaia_build: false

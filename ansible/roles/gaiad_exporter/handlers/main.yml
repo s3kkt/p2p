@@ -1,0 +1,7 @@
+---
+- name: Restart gaiad-exporter service
+  systemd:
+    daemon_reload: yes
+    name: gaiad-exporter
+    state: restarted
+    enabled: yes

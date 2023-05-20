@@ -1,0 +1,12 @@
+[cosmos:children]
+cosmos_test
+cosmos_prod
+
+[cosmos:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[cosmos_test]
+v1896517.hosted-by-vdsina.ru ansible_host=77.105.141.91
+
+[cosmos_prod]
+VM-0-12-ubuntu ansible_host=43.157.30.2

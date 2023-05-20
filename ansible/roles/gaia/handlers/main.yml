@@ -1,0 +1,7 @@
+---
+- name: Restart gaiad service
+  systemd:
+    daemon_reload: yes
+    name: gaiad
+    state: restarted
+    enabled: true

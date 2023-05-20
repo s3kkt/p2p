@@ -1,0 +1,13 @@
+[Unit]
+Description=Gaia Daemon
+After=network-online.target
+
+[Service]
+User=root
+ExecStart={{ gaia_binary_dest_path }}/gaiad start --x-crisis-skip-assert-invariants --home /root/.gaia --log_format {{ gaia_log_format }} --log_level {{ gaia_log_level }}
+Restart=always
+RestartSec=15
+LimitNOFILE={{ gaia_limit_nofile }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+---
+- name: Host base configuration && hardening
+  gather_facts: true
+  become: true
+  hosts: all
+  roles:
+    - { role: users_management, tags: [ users ] }
+    - { role: sshd, tags: [ sshd ] }
+    - { role: lynis, tags: [ lynis ] }
+    - { role: hardening, tags: [ hardening ] }
+  tasks:
+    - name: Notify for reboot
+      debug:
+        msg: Reboot after applying changes is strongly recommended!
+
+- name: Build, install and configure gaiad
+  hosts: all
+  roles:
+    - { role: gaia, tags: [ gaia ] }
+    - { role: gaiad_exporter, tags: [ gaiad_exporter ] }

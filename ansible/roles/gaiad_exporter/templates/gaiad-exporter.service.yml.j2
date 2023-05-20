@@ -1,0 +1,12 @@
+[Unit]
+Description=Gaia Exporter
+After=network-online.target
+
+[Service]
+User=root
+ExecStart={{ gaiad_exporter_binary_dest_path }}/gaiad_exporter -port="19001" -metrics-path="/metrics" -gaiad-bin-path="{{ gaia_binary_dest_path }}gaiad"
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target

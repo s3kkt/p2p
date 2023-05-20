@@ -1,0 +1,21 @@
+---
+- name: install gpg package
+  apt:
+    name: gpg
+    state: present
+    update_cache: yes
+
+- name: ensure Lynis APT key
+  apt_key:
+    url: https://packages.cisofy.com/keys/cisofy-software-public.key
+
+- name: ensure Lynis APT repository
+  apt_repository:
+    filename: docker
+    repo: "deb https://packages.cisofy.com/community/lynis/deb/ stable main"
+
+- name: install Lynis package
+  apt:
+    name: lynis
+    state: present
+    update_cache: yes

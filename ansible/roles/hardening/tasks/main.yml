@@ -1,0 +1,14 @@
+---
+- name: Base packages upgrade and install
+  include_tasks: packages.yml
+
+- name: Firewall configuration
+  include_tasks: iptables.yml
+
+- name: System configuration
+  include_tasks: system_config.yml
+
+- name: Clean unused packages
+  apt:
+    autoremove: yes
+    purge: yes

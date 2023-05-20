@@ -1,0 +1,51 @@
+---
+- name: Install iptables packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - iptables
+    - iptables-persistent
+
+- name: Cleanup raw table
+  iptables_raw:
+    name: "*"
+    table: "raw"
+    state: absent
+
+- name: Common rule
+  iptables_raw:
+    weight: 30
+    name: allow est rel
+    rules: |
+      -A INPUT -i {{ if_wan }} -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+#- name: Allow monitoring connections rule
+#  iptables_raw:
+#    weight: 10
+#    name: allow_monitoring
+#    rules: |
+#      -A INPUT -i {{ if_wan }} -s {{ iptables_allow_nets_list | join(",") }} -m tcp -p tcp -m multiport --dports {{ iptables_allow_nets_ports_list | join(",") }} -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m conntrack --ctstate NEW -j ACCEPT
+
+- name: Allow SSH from trusted networks && NTP
+  iptables_raw:
+    weight: 10
+    name: allow trusted ssh and ntp
+    rules: |
+      -A INPUT -i {{ if_wan }} -m tcp -p tcp -m multiport --dports {{ iptables_allow_tcp_ports | join(",") }} -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m conntrack --ctstate NEW -j ACCEPT
+      -A INPUT -p udp --sport 123 -j ACCEPT
+      -A OUTPUT -p udp --dport 123 -j ACCEPT
+
+- name: Output accept rule
+  iptables_raw:
+    weight: 80
+    name: output_accept
+    rules: '-A OUTPUT -j ACCEPT'
+
+- name: Drop all other incoming packets rule
+  iptables_raw:
+    weight: 90
+    name: drop all
+    rules: | 
+      -A INPUT -i {{ if_wan }} -j DROP
+      -P FORWARD DROP

@@ -1,0 +1,5 @@
+---
+include:
+  - project: ansible/ci/ansible-lint
+    file: role_lint.yml
+
