@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -92,20 +91,12 @@ func GetGaiaStatus() []byte {
 	arg := "status"
 	cmd := exec.Command(gaiadPath, arg)
 
-	//var status bytes.Buffer
-	//cmd.Stdout = &status
-
 	log.Printf("Executing %s %s", gaiadPath, arg)
-	//if err := cmd.Run(); err != nil {
-	//	log.Fatal(err)
-	//}
+
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
 	}
-
-	fmt.Print(string(out))
-
 	return out
 }
 
@@ -118,20 +109,15 @@ func handleMetrics() {
 			return
 		}
 
-		log.Printf("DEBUG: %v\n", gaiaStatus)
-
 		if bn, err := strconv.ParseFloat(gaiaStatus.NodeInfo.ProtocolVersion.Block, 64); err == nil {
-			log.Printf("DEBUG: block number set: %v", bn)
 			blockNumber.Set(bn)
 		}
 
 		if pc, err := strconv.ParseFloat(gaiaStatus.NodeInfo.ProtocolVersion.P2P, 64); err == nil {
-			log.Printf("DEBUG: peers count set: %v", pc)
 			peersCount.Set(pc)
 		}
 
 		timeDelta := math.Round(time.Now().Sub(gaiaStatus.SyncInfo.LatestBlockTime).Seconds())
-		log.Printf("DEBUG: time delta set: %v\n", timeDelta)
 		blockTimeDelta.Set(timeDelta)
 
 		time.Sleep(10 * time.Second)
