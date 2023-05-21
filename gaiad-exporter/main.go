@@ -103,15 +103,20 @@ func handleMetrics() {
 			return
 		}
 
+		log.Printf("DEBUG: %v", gaiaStatus)
+
 		if bn, err := strconv.ParseFloat(gaiaStatus.NodeInfo.ProtocolVersion.Block, 64); err == nil {
+			log.Printf("DEBUG: block number set: %v", bn)
 			blockNumber.Set(bn)
 		}
 
 		if pc, err := strconv.ParseFloat(gaiaStatus.NodeInfo.ProtocolVersion.P2P, 64); err == nil {
+			log.Printf("DEBUG: peers count set: %v", pc)
 			peersCount.Set(pc)
 		}
 
 		timeDelta := math.Round(time.Now().Sub(gaiaStatus.SyncInfo.LatestBlockTime).Seconds())
+		log.Printf("DEBUG: time delta set: %v", timeDelta)
 		blockTimeDelta.Set(timeDelta)
 
 		time.Sleep(10 * time.Second)

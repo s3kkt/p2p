@@ -4,7 +4,7 @@ After=network-online.target
 
 [Service]
 User=root
-ExecStart={{ gaia_binary_dest_path }}/gaiad_exporter -port="19001" -metrics-path="/metrics" -gaiad-bin-path="{{ gaia_binary_dest_path }}/gaiad"
+ExecStart={{ gaia_binary_dest_path }}/gaiad-exporter -port="{{ gaia_exporter_port }}" -metrics-path="{{ gaia_exporter_metrics_path }}" -gaiad-bin-path="{{ gaia_binary_dest_path }}/gaiad"
 Restart=always
 RestartSec=15
 
