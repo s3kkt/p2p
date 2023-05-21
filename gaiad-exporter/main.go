@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -91,16 +90,21 @@ func GetGaiaStatus() []byte {
 	arg := "status"
 	cmd := exec.Command(gaiadPath, "arg")
 
-	var status bytes.Buffer
-	cmd.Stdout = &status
+	//var status bytes.Buffer
+	//cmd.Stdout = &status
 
 	log.Printf("Executing %s %s", gaiadPath, arg)
-	if err := cmd.Run(); err != nil {
-		log.Fatal(err)
+	//if err := cmd.Run(); err != nil {
+	//	log.Fatal(err)
+	//}
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
 	}
 
-	fmt.Print(status.String())
-	return status.Bytes()
+	fmt.Print(string(out))
+
+	return out
 }
 
 func handleMetrics() {
