@@ -82,13 +82,15 @@ func ParseFlags() (string, string, string) {
 	listenPort := flag.String("port", "19001", "Port to listen metrics requests")
 	metricsPath := flag.String("metrics-path", "/metrics", "Path to expose metrics.")
 	gaiadPath := flag.String("gaiad-bin-path", "/usr/sbin/gaiad", "Path to gaiad binary.")
+
 	flag.Parse()
+
 	return *listenPort, *metricsPath, *gaiadPath
 }
 
 func GetGaiaStatus() []byte {
 	arg := "status"
-	cmd := exec.Command(gaiadPath, "arg")
+	cmd := exec.Command(gaiadPath, arg)
 
 	//var status bytes.Buffer
 	//cmd.Stdout = &status
@@ -112,11 +114,11 @@ func handleMetrics() {
 	for {
 		err := json.Unmarshal(GetGaiaStatus(), &gaiaStatus)
 		if err != nil {
-			log.Printf("Cannot unmarshal status JSON. Reason: %v", err)
+			log.Printf("Cannot unmarshal status JSON. Reason: %v\n", err)
 			return
 		}
 
-		log.Printf("DEBUG: %v", gaiaStatus)
+		log.Printf("DEBUG: %v\n", gaiaStatus)
 
 		if bn, err := strconv.ParseFloat(gaiaStatus.NodeInfo.ProtocolVersion.Block, 64); err == nil {
 			log.Printf("DEBUG: block number set: %v", bn)
@@ -129,7 +131,7 @@ func handleMetrics() {
 		}
 
 		timeDelta := math.Round(time.Now().Sub(gaiaStatus.SyncInfo.LatestBlockTime).Seconds())
-		log.Printf("DEBUG: time delta set: %v", timeDelta)
+		log.Printf("DEBUG: time delta set: %v\n", timeDelta)
 		blockTimeDelta.Set(timeDelta)
 
 		time.Sleep(10 * time.Second)
@@ -154,13 +156,13 @@ func metricsServe(listenAddress, metricsPath string) error {
 }
 
 func main() {
-	log.Printf("Starting exporter on :%s%s for %s", listenPort, metricsPath, gaiadPath)
+	log.Printf("Starting exporter on :%s%s for %s\n", listenPort, metricsPath, gaiadPath)
 
 	go handleMetrics()
 
 	err := metricsServe(":"+listenPort, metricsPath)
 	if err != nil {
-		log.Printf("Cannot serve metrics. Reason: %v", err)
+		log.Printf("Cannot serve metrics. Reason: %v\n", err)
 		return
 	}
 }
