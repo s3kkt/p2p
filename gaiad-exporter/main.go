@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"github.com/prometheus/client_golang/prometheus"
@@ -90,9 +91,17 @@ func GetGaiaStatus() []byte {
 
 	argument := "status"
 	log.Printf("Executing %s %s", gaiadPath, argument)
-	command, _ := exec.Command(gaiadPath, argument).Output()
-	log.Printf("DEBUG: status JSON is: %v", command)
-	return command
+	cmd := exec.Command(gaiadPath, argument)
+
+	var status bytes.Buffer
+
+	cmd.Stdout = &status
+
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+
+	return status.Bytes()
 }
 
 func handleMetrics() {
