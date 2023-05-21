@@ -91,7 +91,7 @@ func GetGaiaStatus() []byte {
 	argument := "status"
 	log.Printf("Executing %s %s", gaiadPath, argument)
 	command, _ := exec.Command(gaiadPath, argument).Output()
-	log.Printf("Status JSON is: %v", string(command))
+	log.Printf("DEBUG: status JSON is: %v", command)
 	return command
 }
 
