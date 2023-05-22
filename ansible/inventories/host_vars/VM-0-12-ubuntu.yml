@@ -2,27 +2,35 @@
 env: prod
 if_wan: "eth0"
 
+# Firewall settings
+# Outside allowed ports:
 iptables_allow_tcp_ports: ["22"]
-iptables_allow_nets_list: []
-iptables_allow_nets_ports_list: []
+# Trusted networks list:
+iptables_allow_nets_list: ["109.234.38.118/32"]
+# Ports list for accept connections from allowed networks:
+iptables_allow_nets_ports_list: ["19001"]
 
 # Base role settings
-gaia_build: false
+gaia_build: true
 gaia_reconfigure: true
 
 # Build and init options
-gaia_release_tag: "v9.1.0"
+# Lambda
+gaia_release_tag: "v9.0.0"
 gaia_binary_dest_path: /usr/local/bin
 gaia_moniker: sr-mainnet-node
 
 # App settings from https://hub.cosmos.network/main/hub-tutorials/join-mainnet.html
 gaia_min_gas_price: 0.0025uatom
+# No seeds because of Quicksynk -> addrbook.json
 gaia_seeds: ""
 gaia_enable_state_sync: true
+# https://github.com/cosmos/gaia/blob/main/docs/hub-tutorials/join-mainnet.md#state-sync
 # current height -1000 from https://www.mintscan.io/cosmos/blocks/
-gaia_trust_height: 15378837
-gaia_trust_hash: "7AA112412CFCCF13C9897AE0FF694BCCCA6732051D491998F546AFFC2DD3563F"
+gaia_trust_height: 15401409
+gaia_trust_hash: "45814C6F856719CBA14197DDDDDB15273212457469BB169D3941B77B5B33BE55"
 gaia_rpc_servers: "https://cosmos-rpc.polkachu.com:443,https://rpc-cosmoshub-ia.cosmosia.notional.ventures:443,https://rpc.cosmos.network:443"
+gaia_trust_period: "168h0m0s"
 
 # Service settings
 gaia_limit_nofile: 4096

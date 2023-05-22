@@ -20,12 +20,12 @@
     rules: |
       -A INPUT -i {{ if_wan }} -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-#- name: Allow monitoring connections rule
-#  iptables_raw:
-#    weight: 10
-#    name: allow_monitoring
-#    rules: |
-#      -A INPUT -i {{ if_wan }} -s {{ iptables_allow_nets_list | join(",") }} -m tcp -p tcp -m multiport --dports {{ iptables_allow_nets_ports_list | join(",") }} -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m conntrack --ctstate NEW -j ACCEPT
+- name: Allow trusted networks connections rule
+  iptables_raw:
+    weight: 10
+    name: allow_monitoring
+    rules: |
+      -A INPUT -i {{ if_wan }} -s {{ iptables_allow_nets_list | join(",") }} -m tcp -p tcp -m multiport --dports {{ iptables_allow_nets_ports_list | join(",") }} -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m conntrack --ctstate NEW -j ACCEPT
 
 - name: Allow SSH from trusted networks && NTP
   iptables_raw:

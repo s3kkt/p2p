@@ -129,9 +129,9 @@
     register: confd_existing_files
     changed_when: false
 
-  - name: get sudoers config names
+  - name: get sudoers prometheus names
     set_fact:
-      confd_files: "{% set list=[] %}{% for config in users_management_sudoers %}{{ list.append(config.name) }}{% endfor %}{{ list }}"
+      confd_files: "{% set list=[] %}{% for prometheus in users_management_sudoers %}{{ list.append(prometheus.name) }}{% endfor %}{{ list }}"
 
   - name: remove unmanaged sudoers configs
     file:

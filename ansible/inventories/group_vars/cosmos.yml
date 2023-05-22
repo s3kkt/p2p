@@ -13,11 +13,11 @@ everywhere_allowed_users:
 # https://www.cyberciti.biz/faq/linux-kernel-etcsysctl-conf-security-hardening/
 sysctl_entries:
   dev.tty.ldisc_autoload: 0
-  #fs.protected_fifos: 1
   fs.protected_fifos: 2
   fs.protected_regular: 2
   fs.protected_hardlinks: 1
   fs.suid_dumpable: 0
+  kernel.modules_disabled: 1
   kernel.core_pattern: "|/bin/false"
   kernel.core_uses_pid: 1
   kernel.dmesg_restrict: 1
@@ -49,5 +49,3 @@ sshd:
   X11Forwarding: no
   AllowAgentForwarding: no
 
-gaia_release_tag: "v9.1.0"
-gaia_build: false

@@ -4,7 +4,8 @@ gaia_build: true
 gaia_reconfigure: true
 
 # Build and init options
-gaia_release_tag: "v9.1.0"
+# Lambda
+gaia_release_tag: "v9.0.0"
 gaia_binary_dest_path: /usr/sbin
 gaia_moniker: sr-testnet-node
 
