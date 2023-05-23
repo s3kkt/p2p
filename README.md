@@ -65,3 +65,10 @@ ansible-playbook -bCDi ansible/inventories/cosmos.hosts ansible/cosmos.yml -l co
 Для наглядности написал docker-compose манифест, который запускает prometheus+grafana, добавляет в графану дашборд из сохранённого json файла.  
 Для старта необходимо лишь поправить `monitoring/prometheus/prometheus.yml`, прописав актуальный адрес ВМ, на которой запущен экспортер.  
 Автоматизировать конфигурирование прометея не стал, в проде всё равно должен быть service_discovery и  статические конфиги не нужно использовать.
+
+```bash
+cd monitoring
+docker-compose up -d
+```
+
+![img.png](img.png)
