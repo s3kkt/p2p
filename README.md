@@ -27,6 +27,17 @@
 Добавил переменные для изменения app.toml, чтобы активировать API, думал экспортить статус оттуда, но изучать API оказалось долго.  
 Плюсом такого решения была бы возможность запускать экспортер удалённо, например, в сети мониторинга, а минусом, конечно же, безопасность, но эндпоинт API можно жёстко закрыть файрволлом и этот вопрос будет решён.
 
+Для удобства полученгие `trust_height` и `trust_hash` написан небольшой скрипт `get_height_and_hash.sh`
+```bash
+> ./get_height_and_hash.sh mainnet 
+Gaia trust height: 15413288
+Gaia trust hash: E100573709FE602151184C62B0C15784E6148F8E05B8C7F47F92A28CDA193C2D
+
+> ./get_height_and_hash.sh testnet
+Gaia trust height: 16096105
+Gaia trust hash: 7A931A30EEE7629B5EB1A531413FADD9956D612F324D74E622CEF4D9BA904441
+```
+
 # Экспортер
 Раздел cosmos.yml: Build, and run gaiad-exporter
 

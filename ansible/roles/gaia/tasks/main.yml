@@ -70,7 +70,7 @@
         cmd: zcat genesis.cosmoshub-4.json.gz > genesis.json
     - name: Quicksync address book
       get_url:
-        url: https://quicksync.io/addrbook.cosmos.json
+        url: https://dl2.quicksync.io/json/addrbook.cosmos.json
         dest: /root/.gaia/config/addrbook.json
     - name: Set mainnet app.toml options
       template:

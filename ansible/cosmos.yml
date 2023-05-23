@@ -16,5 +16,5 @@
 - name: Build, install and configure gaiad
   hosts: all
   roles:
-    - { role: gaia, tags: [ gaia ] }
+    - { role: gaia, tags: [ gaiad ] }
     - { role: gaiad_exporter, tags: [ gaiad_exporter ] }
