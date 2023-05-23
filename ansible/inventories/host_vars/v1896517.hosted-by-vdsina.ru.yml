@@ -2,24 +2,24 @@
 env: test
 if_wan: "ens3"
 
-gaia_build: true
+gaia_build: false
 gaia_reconfigure: true
 
 # Firewall settings
 # Outside allowed ports:
 iptables_allow_tcp_ports: ["22"]
 # Trusted networks list:
-iptables_allow_nets_list: ["109.234.38.118/32"]
+iptables_allow_nets_list: ["31.172.77.122/32"]
 # Ports list for accept connections from allowed networks:
 iptables_allow_nets_ports_list: ["19001"]
 
 # App settings from https://hub.cosmos.network/main/hub-tutorials/join-testnet.html
 gaia_min_gas_price: "0.0025uatom"
 gaia_seeds: "639d50339d7045436c756a042906b9a69970913f@seed-01.theta-testnet.polypore.xyz:26656,3e506472683ceb7ed75c1578d092c79785c27857@seed-02.theta-testnet.polypore.xyz:26656"
-gaia_enable_state_sync: true
+gaia_enable_state_sync: "true"
 # current height -1000 from https://www.mintscan.io/cosmos/blocks
-gaia_trust_height: 16080903
-gaia_trust_hash: "732A3C22C8343834F895D11284BE0A05986BD395A7AA71405B65A99BF6039E3D"
+gaia_trust_height: "16097591"
+gaia_trust_hash: "D6FF6033497BA7719383D85F4867A60C0193A608B40F5C593DA7C0237D374A1A"
 gaia_rpc_servers: "https://rpc.state-sync-01.theta-testnet.polypore.xyz:443,https://rpc.state-sync-02.theta-testnet.polypore.xyz:443"
 gaia_trust_period: "8h0m0s"
 gaia_api_enabled: false
@@ -27,6 +27,6 @@ gaia_swagger_enabled: false
 gaia_api_listen_addr: "tcp://0.0.0.0:1317"
 
 # Service settings
-gaia_limit_nofile: 512
+gaia_limit_nofile: 4096
 gaia_log_format: "plain"
-gaia_log_level: "debug"
+gaia_log_level: "error"

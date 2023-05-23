@@ -15,7 +15,7 @@
 Не стал перевешивать sshd на другой порт, т.к. не вижу особого смысла в этом (сканеры всё равно найдут sshd на другом порту).
 
 # Сборка, установка и настройка клиента (gaiad)
-Раздел cosmos.yml: Build, install and configure gaiad
+Раздел cosmos.yml: Build, install and configure gaiad, тег `gaiad`
 
 При выполнении этого этапа опирался на [официальную документацию](https://hub.cosmos.network/main/hub-tutorials/join-testnet.html)
 
@@ -37,9 +37,10 @@ Gaia trust hash: E100573709FE602151184C62B0C15784E6148F8E05B8C7F47F92A28CDA193C2
 Gaia trust height: 16096105
 Gaia trust hash: 7A931A30EEE7629B5EB1A531413FADD9956D612F324D74E622CEF4D9BA904441
 ```
+Лучше сразу в таски ansible сделать, чтобы значения при запуске плейбука подставлялись, просто решил не тратить время.
 
 # Экспортер
-Раздел cosmos.yml: Build, and run gaiad-exporter
+Раздел cosmos.yml: Build, install and configure gaiad, тег `gaiad_exporter`
 
 Исполняемый файл собирается в Docker на локальной машине и приносится на хост с помощью ansible, запуск через systemd unit
 
@@ -47,6 +48,7 @@ Gaia trust hash: 7A931A30EEE7629B5EB1A531413FADD9956D612F324D74E622CEF4D9BA90444
 - тип данных GaiaStatus, содержащий все поля из JSON, кторый возвращается при вызове `gaiad status` - задел на будущее, если ещё какие-то метрики или лейблы понадобятся.  
 - флаг с портом, на котором будет запускаться экспортер
 - флаг metrics_path, если вдруг понадобится перевесить с дефолтного `/metrics`
+- флаг с путём до исполняемого файла gaiad, подставляется из переменных ансибл
 
 Можно доработать:
 - добавить таймаут на выполнение `gaiad status`, передавать через флаг
@@ -58,3 +60,8 @@ Gaia trust hash: 7A931A30EEE7629B5EB1A531413FADD9956D612F324D74E622CEF4D9BA90444
 ```bash
 ansible-playbook -bCDi ansible/inventories/cosmos.hosts ansible/cosmos.yml -l cosmos_test -t gaia
 ```
+
+# Мониторинг
+Для наглядности написал docker-compose манифест, который запускает prometheus+grafana, добавляет в графану дашборд из сохранённого json файла.  
+Для старта необходимо лишь поправить `monitoring/prometheus/prometheus.yml`, прописав актуальный адрес ВМ, на которой запущен экспортер.  
+Автоматизировать конфигурирование прометея не стал, в проде всё равно должен быть service_discovery и  статические конфиги не нужно использовать.

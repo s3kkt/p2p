@@ -27,7 +27,7 @@
     rules: |
       -A INPUT -i {{ if_wan }} -s {{ iptables_allow_nets_list | join(",") }} -m tcp -p tcp -m multiport --dports {{ iptables_allow_nets_ports_list | join(",") }} -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m conntrack --ctstate NEW -j ACCEPT
 
-- name: Allow SSH from trusted networks && NTP
+- name: Allow connections to described ports && NTP
   iptables_raw:
     weight: 10
     name: allow trusted ssh and ntp
